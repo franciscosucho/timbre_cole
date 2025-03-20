@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="shortcut icon" href="/resources/logo.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+
+<% if (session.user_tema == "oscuro") { %>
+    <body class="oscuro">
+<% } else { %>
+    <body class="claro">
+<% } %>
+
+    <main>
+        <aside id="menu_lateral" class="desactive"> <%- include('menu.ejs') %></aside>
+        <div id="cont_main">
+            <div id="panel_options">
+                <h1>Bienvenido tu calendario</h1>
+            </div>
+            <div id="cont_calendario">
+                <div class="cont_year">
+                    <h3 id="year_text"><%= new Date().getFullYear() %></h3>
+                </div>
+                <section id="cont_query">
+                    <div id="cont_main_query">
+                        <h3>Que significan los colores en cada día?</h3>
+                    </div>
+                    <div id="cont_items_query" class="desac">
+                        <div class="items">
+                            <span id="dia_evento"></span>
+                            <p>Los días en los cuales hay un evento, se mostrarán en color verde.</p>
+                          
+                        </div>
+                        <div class="items">
+                            <span id="dia_hoy"></span>
+                            <p>El día actual se mostrará en color azul.</p>
+                          
+                        </div>
+                        <div class="items">
+                            <span id="dia_normal"></span>
+                            <p>Los días en los cuales no haya color indican que hay ningun evento.</p>
+                         
+                        </div>
+                    </div>
+                    
+                </section>
+                <div class="calendario-body">
+
+                    <% 
+                    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto",
+                        "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+                    const diasSemana = ["D", "L", "M", "X", "J", "V", "S"];
+                    const currentYear = new Date().getFullYear();
+                    const today = new Date();
+                
+                    for (let index = 0; index < 12; index++) {
+                        const firstDay = new Date(currentYear, index, 1).getDay();
+                        const lastDate = new Date(currentYear, index + 1, 0).getDate();
+                    %>
+                        <div class="div_mes">
+                            <h3 class="text_mes <%= index === today.getMonth() && currentYear === today.getFullYear() ? 'mes_hoy' : '' %>">
+                                <%= meses[index] %>
+                            </h3>
+                            <div class="header_dias">
+                                <% diasSemana.forEach((dia) => { %>
+                                    <span class="dia_semana"><%= dia %></span>
+                                <% }) %>
+                            </div>
+                            <div class="cont_dias">
+                                <% 
+                                // Agregar días vacíos al inicio del mes
+                                for (let empty = 0; empty < firstDay; empty++) { 
+                                %>
+                                    <span class="dia_vacio"></span>
+                                <% } %>
+                                
+                                <% 
+                                // Agregar los días del mes con eventos
+for (let date = 1; date <= lastDate; date++) {
+    const isToday = date === today.getDate() && index === today.getMonth() && currentYear === today.getFullYear();
+    const dayOfWeek = new Date(currentYear, index, date).getDay();
+    const eventoFecha = new Date(currentYear, index, date).toISOString().split('T')[0]; // Formato YYYY-MM-DD
+    const nombreDia = diasSemana[dayOfWeek]; // Nombre del día
+
+    // Verificar si hay evento, día apagado o feriado
+    const tieneEvento = results_eventos.some(evento => new Date(evento.Fecha).toISOString().split('T')[0] === eventoFecha);
+    const dia_feriado = data.some(feriado => feriado.fecha === eventoFecha); 
+
+    // Determinar si el día debe estar apagado 
+
+    // Construcción de clases evitando espacios extra
+    let clases = ['dia_mes'];
+    if (isToday) clases.push('hoy');
+    if (tieneEvento) clases.push('evento');
+    if (dia_feriado) clases.push('feriado');
+%>
+    <a href="/calendar_dia?dia=<%= date %>&mes=<%= index %>&nombre_dia=<%= dayOfWeek %>&año=<%= currentYear %>" 
+       class="<%= clases.join(' ') %>">
+        <%= date %>
+    </a>
+<% } %>
+
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="js/calendario.js"></script>
+</body>
+
+</html>
