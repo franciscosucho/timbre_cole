@@ -20,15 +20,15 @@
         <aside id="menu_lateral" class="desactive"> <%- include('menu.ejs') %></aside>
         <div id="cont_main">
             <div id="panel_options">
-                <h1>Bienvenido tu calendario</h1>
+                <h1>Bienvenido tu calendario 📅</h1>
             </div>
             <div id="cont_calendario">
                 <div class="cont_year">
-                    <h3 id="year_text"><%= new Date().getFullYear() %></h3>
+                    <h3 id="year_text"><%= new Date().getFullYear() %> ✨</h3>
                 </div>
                 <section id="cont_query">
                     <div id="cont_main_query">
-                        <h3>Que significan los colores en cada día?</h3>
+                        <h3>Que significan los colores en cada día?🧐</h3>
                     </div>
                     <div id="cont_items_query" class="desac">
                         <div class="items">
@@ -64,7 +64,7 @@
                     %>
                         <div class="div_mes">
                             <h3 class="text_mes <%= index === today.getMonth() && currentYear === today.getFullYear() ? 'mes_hoy' : '' %>">
-                                <%= meses[index] %>
+                                <%= meses[index] %>😎
                             </h3>
                             <div class="header_dias">
                                 <% diasSemana.forEach((dia) => { %>
@@ -113,6 +113,30 @@ for (let date = 1; date <= lastDate; date++) {
         </div>
     </main>
     <script src="js/calendario.js"></script>
+    <script>
+    
+        const audio1 = new Audio('/resources/skidi.mp3');
+        const audio2 = new Audio('/resources/trala.mp3');
+
+        // Función para reproducir el primer audio en bucle
+        function playAudio1() {
+            audio1.play();
+            audio1.onended = function() {
+                playAudio2(); 
+            };
+        }
+
+        // Función para reproducir el segundo audio en bucle
+        function playAudio2() {
+            audio2.play();
+            audio2.onended = function() {
+                playAudio1(); 
+            };
+        }
+
+        
+        playAudio1();
+    </script>
 </body>
 
 </html>
